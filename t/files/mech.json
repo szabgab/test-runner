@@ -10,7 +10,7 @@
       },
       {
          "id"           : 1,
-         "action"       : "get_url",
+         "action"       : "get_ok",
          "params" : {
             "url"       : "http://www.google.com/"
          }

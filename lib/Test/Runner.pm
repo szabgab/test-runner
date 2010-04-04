@@ -43,7 +43,8 @@ sub run {
 	if (not $data->{format} or $data->{format} ne '0.01') {
 		die "Unknown format\n";
 	}
-	my @code = ('use strict;', 'use warnings;', '', 'my %tools;');
+	my @code = ('use strict;', 'use warnings;', '');
+	push @code, ('use Test::More;', 'plan tests => 1;', 'use Test::Runner::Mechanize;', 'my %tools;');
 	my $highest_id = 0;
 	foreach my $step ( @{ $data->{steps} } ) {
 		if ($step->{id} > $highest_id and $step->{action} = 'new') {
