@@ -1,0 +1,26 @@
+{
+   "name": "Simple web test",
+   "format" : 0.01,
+   "steps": [
+      {
+         "id"      : 1,
+         "action"  : "new",
+         "tool"    : "Mechanize",
+         "name"    : "User foo"
+      },
+      {
+         "id"           : 1,
+         "action"       : "get_ok",
+         "params" : {
+            "url"       : "http://www.google.com/"
+         }
+      },
+      {
+         "id"          : 1,
+         "action"      : "content_like",
+         "params" : {
+            "regex": "<title>Google</title>"
+         }
+      }
+   ]
+}

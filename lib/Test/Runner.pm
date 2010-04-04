@@ -44,8 +44,9 @@ sub run {
 		die "Unknown format\n";
 	}
 	my @code = ('use strict;', 'use warnings;', '');
-	push @code, ('use Test::More;', 'plan tests => 1;', 'use Test::Runner::Mechanize;', 'my %tools;');
+	push @code, ('use Test::More;', '', 'use Test::Runner::Mechanize;', 'my %tools;');
 	my $highest_id = 0;
+	my $test_count = 0;
 	foreach my $step ( @{ $data->{steps} } ) {
 		if ($step->{id} > $highest_id and $step->{action} = 'new') {
 			$highest_id = $step->{id};
@@ -53,13 +54,19 @@ sub run {
 			next;
 		}
 
+		$test_count++;
 		# hmm we are serializing the params here, should we just use Data::Dumper?
 		my $params = '';
 		foreach my $k (keys %{ $step->{params} }) {
-			$params .= "$k => '$step->{params}{$k}', ";
+			if ($k eq 'regex') {
+				$params .= "$k => qr{$step->{params}{$k}}, ";
+			} else {
+				$params .= "$k => '$step->{params}{$k}', ";
+			}
 		}
 		push @code, '$tools{' . $step->{id} . '}->' . $step->{action} . '(' . $params . ');';
 	}
+	$code[4] = "plan tests => $test_count;";
 	$self->code(\@code);
 };
 

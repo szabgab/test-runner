@@ -10,4 +10,10 @@ sub get_ok {
 	return $self->SUPER::get_ok($url);
 }
 
+sub content_like {
+	my ($self, %params) = @_;
+	my $regex = delete $params{regex};
+	return $self->SUPER::content_like($regex);
+}
+
 1;
