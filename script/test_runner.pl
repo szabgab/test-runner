@@ -2,4 +2,4 @@ use strict;
 use warnings;
 
 use Test::Runner;
-Test::Runner->new;
+Test::Runner->new->run;

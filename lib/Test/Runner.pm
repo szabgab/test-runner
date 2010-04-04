@@ -6,16 +6,22 @@ use Data::Dumper qw(Dumper);
 use Getopt::Long qw(GetOptions);
 use JSON ();
 
+has 'file' => (isa => 'Str', is => 'rw');
 
-after 'new' => sub {
+sub run {
+	my $self = shift;
+
 	my %opt;
 	GetOptions(\%opt,
 		'file=s',
-	) or usage();
-	usage() if not $opt{file};
+	) or _usage();
+	$self->file($opt{file}) if $opt{file};
 
 
-	my $data_json = slurp($opt{file});
+	_usage() if not $self->file;
+
+
+	my $data_json = slurp($self->file);
 	my $data = JSON::from_json($data_json);
 	print Dumper $data;
 };
@@ -28,7 +34,7 @@ sub slurp {
 	return <$fh>;
 }
 
-sub usage {
+sub _usage {
 	print <<"END_USAGE";
 Usage: $0
          --file FILENAME     mandatory
