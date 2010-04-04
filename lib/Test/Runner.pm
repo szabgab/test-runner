@@ -43,25 +43,36 @@ sub run {
 	if (not $data->{format} or $data->{format} ne '0.01') {
 		die "Unknown format\n";
 	}
+	my %tools;
 	my @code = ('use strict;', 'use warnings;', '');
-	push @code, ('use Test::More;', '', 'use Test::Runner::Mechanize;', 'my %tools;');
+	push @code, ('use Test::More;', '', 'use Test::WWW::Mechanize;', 'my %tools;');
 	my $highest_id = 0;
 	my $test_count = 0;
 	foreach my $step ( @{ $data->{steps} } ) {
 		if ($step->{id} > $highest_id and $step->{action} = 'new') {
 			$highest_id = $step->{id};
-			push @code, '$tools{' . $step->{id} . '} = ' . 'Test::Runner::' . $step->{tool} . '->new(' . ');';
+			push @code, '$tools{' . $step->{id} . '} = ' . $step->{tool} . '->new(' . ');';
+			$tools{ $step->{id} } = $step->{tool};
 			next;
 		}
 
 		$test_count++;
+		
 		# hmm we are serializing the params here, should we just use Data::Dumper?
 		my $params = '';
-		foreach my $k (keys %{ $step->{params} }) {
-			if ($k eq 'regex') {
-				$params .= "$k => qr{$step->{params}{$k}}, ";
-			} else {
-				$params .= "$k => '$step->{params}{$k}', ";
+		if ($tools{ $step->{id} } eq 'Test::WWW::Mechanize') {
+			if ($step->{action} eq 'get_ok') {
+				$params = "'" . delete($step->{params}{url}) . "', ";
+			} elsif ($step->{action} eq 'content_like') {
+				$params = 'qr{' . delete($step->{params}{regex}) . '}, ';
+			}
+		} else {
+			foreach my $k (keys %{ $step->{params} }) {
+				if ($k eq 'regex') {
+					$params .= "$k => qr{$step->{params}{$k}}, ";
+				} else {
+					$params .= "$k => '$step->{params}{$k}', ";
+				}
 			}
 		}
 		push @code, '$tools{' . $step->{id} . '}->' . $step->{action} . '(' . $params . ');';

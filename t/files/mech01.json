@@ -5,7 +5,7 @@
       {
          "id"      : 1,
          "action"  : "new",
-         "tool"    : "Mechanize",
+         "tool"    : "Test::WWW::Mechanize",
          "name"    : "User foo"
       },
       {
