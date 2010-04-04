@@ -1,0 +1,19 @@
+{
+   "name": "Simple web test",
+   "format" : 0.01,
+   "steps": [
+      {
+         "id"      : 1,
+         "action"  : "new",
+         "tool"    : "WWW::Mechanize",
+         "name"    : "User foo"
+      },
+      {
+         "id"           : 1,
+         "action"       : "get_url",
+         "params" : {
+            "url"       : "http://www.google.com/"
+         }
+      }
+   ]
+}
