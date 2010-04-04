@@ -6,7 +6,7 @@ use Test::More;
 use Test::Runner;
 
 
-my @files = ('t/files/mech.json');
+my @files = glob('t/files/*.json');
 plan tests => scalar @files;
 
 foreach my $file (@files) {
