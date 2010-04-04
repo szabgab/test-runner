@@ -9,6 +9,14 @@ use JSON ();
 has 'file' => (isa => 'Str',      is => 'rw');
 has 'code' => (isa => 'ArrayRef', is => 'rw');
 
+our $VERSION = '0.01';
+
+=head1 NAME
+
+Test::Runner - running tests written in JSON format
+
+=cut
+
 sub run {
 	my $self = shift;
 
